@@ -1,0 +1,7 @@
+# Normalize line endings to LF so CI (Linux) and shell/YAML/Dockerfiles stay consistent
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.pdf binary
+*.safetensors binary
+*.bin binary

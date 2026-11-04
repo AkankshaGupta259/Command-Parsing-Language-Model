@@ -1,0 +1,12 @@
+.venv/
+.secrets/
+.git/
+**/__pycache__/
+*.pyc
+results/
+datasets/
+models/
+report/
+*.pdf
+.pytest_cache/
+.ruff_cache/

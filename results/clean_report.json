@@ -1,0 +1,10 @@
+{
+  "input_records": 3000,
+  "rejected_invalid_json": 0,
+  "rejected_bad_keys": 0,
+  "rejected_bad_intent": 12,
+  "rejected_bad_slot": 40,
+  "duplicates": 50,
+  "kept": 2898,
+  "sha256": "5b4a171a9c981bf8651a5077eacc6956f0e18a2ed34423011c8f1a9ba04a4f6d"
+}

@@ -1,0 +1,53 @@
+# --- Local planning / tracker files (not part of the submission) ---
+ROADMAP.md
+
+# --- Model weights & artifacts (handout: never commit model files to Git) ---
+models/v1/*
+models/v2/*
+!models/v1/model.sha256
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.gguf
+*.onnx
+
+# --- Secrets / credentials (handout: no credentials, keys or passwords in the repo) ---
+.secrets/
+*.env
+.env
+.env.*
+*secret*.yaml
+*secret*.yml
+*credentials*
+*.pem
+*.key
+*.crt
+kubeconfig*
+
+# --- Teacher shard outputs & large generated data (kept in object storage, not Git) ---
+datasets/teacher/
+datasets/v1/train.jsonl
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# --- Build / stray outputs ---
+# NOTE: results/ is intentionally tracked — the handout requires score.py outputs,
+# Locust CSVs and command logs committed there as evidence.
+*.log
+!results/*.log
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

@@ -1,0 +1,32 @@
+# k3d cluster configuration for the CS3081 mini project.
+# Create with:  k3d cluster create --config cluster/k3d.yaml
+# (wired into `make up` in Task 6)
+#
+# Single-node cluster (server only) — enough for a laptop. k3s bundles the
+# Traefik ingress controller and metrics-server (needed for the HPA in Task 4).
+# Host port 8080 is mapped to Traefik (port 80) so the load test can hit
+# http://localhost:8080 exactly as the handout's Locust command expects.
+# k3d automatically exposes `host.k3d.internal` inside the cluster, which the
+# labelling workers use to reach the Ollama teacher running on the host.
+apiVersion: k3d.io/v1alpha5
+kind: Simple
+metadata:
+  name: cs3081
+servers: 1
+agents: 0
+ports:
+  - port: 8080:80
+    nodeFilters:
+      - loadbalancer
+options:
+  k3d:
+    wait: true
+    timeout: "120s"
+  k3s:
+    extraArgs:
+      # metrics-server stays enabled (default) for `kubectl top` + HPA.
+      # Traefik stays enabled (default) for the Ingress in Task 4.
+      []
+  kubeconfig:
+    updateDefaultKubeconfig: true
+    switchCurrentContext: true

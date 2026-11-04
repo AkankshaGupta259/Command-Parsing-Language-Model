@@ -1,0 +1,60 @@
+# Parallel teacher-labelling workers (Task 1, step 5): two Jobs in namespace
+# `pipeline`, each with a different SHARD_INDEX, SHARD_COUNT=2. Together they cover
+# every command id exactly once. They read S3 credentials from the s3-credentials
+# Secret and reach the host Ollama teacher via host.k3d.internal.
+#
+# Launch:   kubectl apply -f k8s/pipeline/worker-jobs.yaml
+# Watch:    kubectl get pods -n pipeline -w
+# Logs:     kubectl logs -n pipeline -l shard=0 -f
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: label-shard-0
+  namespace: pipeline
+spec:
+  backoffLimit: 6
+  template:
+    metadata:
+      labels: {app: labeller, shard: "0"}
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: labeller
+          image: cs3081-worker:latest
+          imagePullPolicy: IfNotPresent      # image is imported via `k3d image import`
+          env:
+            - {name: SHARD_INDEX, value: "0"}
+            - {name: SHARD_COUNT, value: "2"}
+            - {name: OLLAMA_HOST, value: "http://host.k3d.internal:11434"}
+          envFrom:
+            - secretRef: {name: s3-credentials}   # AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, S3_ENDPOINT
+          resources:
+            requests: {cpu: "50m",  memory: "96Mi"}
+            limits:   {cpu: "500m", memory: "256Mi"}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: label-shard-1
+  namespace: pipeline
+spec:
+  backoffLimit: 6
+  template:
+    metadata:
+      labels: {app: labeller, shard: "1"}
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: labeller
+          image: cs3081-worker:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - {name: SHARD_INDEX, value: "1"}
+            - {name: SHARD_COUNT, value: "2"}
+            - {name: OLLAMA_HOST, value: "http://host.k3d.internal:11434"}
+          envFrom:
+            - secretRef: {name: s3-credentials}
+          resources:
+            requests: {cpu: "50m",  memory: "96Mi"}
+            limits:   {cpu: "500m", memory: "256Mi"}
