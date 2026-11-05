@@ -2,9 +2,13 @@
 ROADMAP.md
 
 # --- Model weights & artifacts (handout: never commit model files to Git) ---
+models/*
+!models/v1
+!models/v2
 models/v1/*
 models/v2/*
 !models/v1/model.sha256
+!models/v2/model.sha256
 *.safetensors
 *.bin
 *.pt
@@ -45,6 +49,8 @@ env/
 # Locust CSVs and command logs committed there as evidence.
 *.log
 !results/*.log
+# smoke-test loss files (make train SUBSET=n) are throwaway, not deliverables
+training/loss_*subset*.csv
 
 # --- OS / editor ---
 .DS_Store

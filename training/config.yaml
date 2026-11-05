@@ -1,0 +1,29 @@
+# Task 2 training configuration.
+# `make train` reads ONLY this file. Everything that affects the trained model
+# is recorded here so the run is reproducible.
+
+model_name: EleutherAI/pythia-70m
+train_file: datasets/v1/train.jsonl
+max_train_records: 1500          # handout: use no more than the first 1500 records
+
+# --- the six reproducibility items the handout requires ---
+seed: 42
+learning_rate: 5.0e-4
+batch_size: 8
+epochs: 3
+max_seq_length: 128
+library_versions:
+  torch: "2.15.0"
+  transformers: "5.22.1"
+  accelerate: "1.15.0"
+  tokenizers: "0.23.3"
+  safetensors: "0.8.0"
+  pyyaml: "6.0.3"
+
+# --- optional knobs, kept explicit for reproducibility ---
+weight_decay: 0.0
+warmup_steps: 0
+
+# v2: a second version for the Task 4 rolling update (two more epochs than v1).
+v2:
+  epochs: 5

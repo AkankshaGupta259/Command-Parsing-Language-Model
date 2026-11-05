@@ -1,0 +1,14 @@
+# Task 2 training dependencies (CPU-only training on the laptop).
+# Pinned to the exact versions used, matching training/config.yaml.
+#
+# On Linux, `pip install torch==2.15.0` pulls the large CUDA build; for a
+# CPU-only install use the CPU wheel index:
+#   pip install torch==2.15.0 --index-url https://download.pytorch.org/whl/cpu
+# On Windows the default PyPI wheel is already CPU-only.
+torch==2.15.0
+transformers==5.22.1
+accelerate==1.15.0
+tokenizers==0.23.3
+safetensors==0.8.0
+numpy==2.5.4
+PyYAML==6.0.3
