@@ -1,5 +1,9 @@
 # --- Local planning / tracker files (not part of the submission) ---
 ROADMAP.md
+TODO.md
+# report kept untracked for now (user will push it themselves later);
+# delete the next line to start tracking it
+report/report.md
 
 # --- Model weights & artifacts (handout: never commit model files to Git) ---
 models/*

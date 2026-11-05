@@ -1,0 +1,12 @@
+# Task 3 inference service dependencies, pinned.
+# torch is installed from the CPU wheel index in the Dockerfile (no CUDA/GPU
+# libraries) to keep the image small; the version here is the CPU build 2.5.1.
+fastapi==0.115.6
+uvicorn==0.34.0
+pydantic==2.10.4
+boto3==1.43.123
+torch==2.5.1
+transformers==4.46.3
+tokenizers==0.20.3
+safetensors==0.8.0
+numpy==2.5.4
