@@ -1,0 +1,17 @@
+# ClusterIP Service in front of the parser Pods. Port 80 -> container 8000.
+# Only Ready Pods (readiness probe passing) receive traffic, so while a Pod is
+# still downloading/loading the model it is not an endpoint.
+apiVersion: v1
+kind: Service
+metadata:
+  name: parser
+  namespace: app
+  labels:
+    app: parser
+spec:
+  selector:
+    app: parser
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8000

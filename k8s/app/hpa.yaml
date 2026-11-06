@@ -1,0 +1,34 @@
+# HorizontalPodAutoscaler (Task 4): 1-2 replicas, scale on 70% CPU of the
+# request (250m). At rest CPU is near zero so it settles at 1 replica; under the
+# load test CPU saturates the core (>70%) so it scales to 2. Uses metrics-server,
+# which k3s already runs.
+#
+# Limitation: the cluster is a single node on one laptop, so max 2 replicas and
+# min 1 is as far as scaling can meaningfully go, and there is no fault tolerance
+# across machines - every replica shares the same physical host.
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: parser
+  namespace: app
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: parser
+  minReplicas: 1
+  maxReplicas: 2
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+  behavior:
+    # min/max/target are exactly as specified; these windows only make the
+    # scale-down observable quickly on a local demo instead of after 5 minutes.
+    scaleUp:
+      stabilizationWindowSeconds: 0
+    scaleDown:
+      stabilizationWindowSeconds: 30

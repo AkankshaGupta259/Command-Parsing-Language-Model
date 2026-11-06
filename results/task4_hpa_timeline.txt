@@ -1,0 +1,5 @@
+# Task 4 HPA scaling timeline (min 1, max 2, target 70% CPU, request 100m)
+# transitions captured during the standard 4-user 2-min load:
+00:57:51  replicas=1  cpu=3%     at rest
+00:58:53  replicas=2  cpu=999%   under load -> scaled UP 1->2
+01:01:18  replicas=1  cpu=3%     load ended -> scaled DOWN 2->1

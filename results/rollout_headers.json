@@ -1,0 +1,14 @@
+{
+  "per_replica": {
+    "parser-7cfc899dc-zvk8x": 12,
+    "parser-7cfc899dc-4rvsj": 6,
+    "parser-cf87798d7-gjf7v": 21,
+    "parser-cf87798d7-zbw6z": 10,
+    "parser-7cfc899dc-lqttt": 95,
+    "parser-7cfc899dc-tqlgs": 89
+  },
+  "per_model_version": {
+    "v1": 202,
+    "v2": 31
+  }
+}

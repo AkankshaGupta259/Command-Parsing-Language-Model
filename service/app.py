@@ -25,6 +25,7 @@ import os
 import pathlib
 import tempfile
 import threading
+import time
 
 import boto3
 import torch
@@ -97,12 +98,18 @@ def _download_model(dest: pathlib.Path):
 
 def _load_model():
     """Background worker: fetch + load the model, then flip the ready flag."""
+    t0 = time.time()
     try:
         if MODEL_URI.startswith("s3://"):
+            print(f"[startup] downloading model {MODEL_VERSION} from object storage "
+                  f"{MODEL_URI} (endpoint {S3_ENDPOINT})", flush=True)
             src = pathlib.Path(tempfile.mkdtemp(prefix="model_"))
             _download_model(src)
+            print(f"[startup] download complete in {time.time() - t0:.1f}s; loading model",
+                  flush=True)
         else:
             src = pathlib.Path(MODEL_URI)   # local directory (development)
+            print(f"[startup] loading model from local path {MODEL_URI}", flush=True)
         tok = AutoTokenizer.from_pretrained(src)
         if tok.pad_token is None:
             tok.pad_token = tok.eos_token
@@ -111,8 +118,10 @@ def _load_model():
         model.eval()
         STATE["tok"], STATE["model"] = tok, model
         STATE["ready"] = True
+        print(f"[startup] model {MODEL_VERSION} ready in {time.time() - t0:.1f}s", flush=True)
     except Exception as exc:  # noqa: BLE001 - surface any load failure via /readyz
         STATE["error"] = repr(exc)
+        print(f"[startup] model load FAILED: {exc!r}", flush=True)
 
 
 @app.on_event("startup")

@@ -1,0 +1,65 @@
+# Inference service Deployment (Task 4). Two replicas to start; the HPA then
+# scales between 1 and 2 on CPU. Credentials and the S3 endpoint come only from
+# the s3-credentials Secret; the model is downloaded from object storage at
+# start-up (no weights in the image).
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: parser
+  namespace: app
+  labels:
+    app: parser
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0        # never drop below the desired ready count
+      maxSurge: 1              # bring up the new Pod before removing the old one
+  selector:
+    matchLabels:
+      app: parser
+  template:
+    metadata:
+      labels:
+        app: parser
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: parser
+          image: cs3081-service:latest
+          imagePullPolicy: IfNotPresent      # image is imported via `k3d image import`
+          ports:
+            - containerPort: 8000
+          env:
+            - {name: MODEL_URI, value: "s3://models/v1"}
+            - {name: MODEL_VERSION, value: "v1"}
+            - {name: MAX_NEW_TOKENS, value: "64"}
+            - name: POD_NAME                   # -> X-Served-By response header
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          envFrom:
+            - secretRef:
+                name: s3-credentials           # AWS_ACCESS_KEY_ID/SECRET + S3_ENDPOINT
+          resources:
+            # CPU request is 100m so that the standard 4-user load pushes CPU
+            # past the HPA's 70% target (scales 1->2) while an idle Pod stays
+            # well under it (scales back to 1). Memory sized from the observed
+            # ~620Mi working set, with headroom under the 1Gi limit.
+            requests: {cpu: "100m", memory: "512Mi"}
+            limits:   {cpu: "1",    memory: "1Gi"}
+          livenessProbe:                       # process alive -> /healthz is always 200
+            httpGet: {path: /healthz, port: 8000}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
+          readinessProbe:                      # 503 until the model loads -> no endpoints yet
+            httpGet: {path: /readyz, port: 8000}
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 3
+          lifecycle:
+            preStop:                           # keep serving while endpoints drain
+              exec:
+                command: ["sh", "-c", "sleep 8"]
