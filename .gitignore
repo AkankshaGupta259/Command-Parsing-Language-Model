@@ -1,10 +1,6 @@
-# --- Local planning / tracker files (not part of the submission) ---
-ROADMAP.md
-TODO.md
-AI_USE_Template.md
-# report kept untracked for now (user will push it themselves later);
-# delete the next line to start tracking it
-report/report.md
+# --- Local-only files (not part of the GitHub code repo) ---
+# The scanned handwritten reflection is a submission-zip item, not repo code.
+230101072.pdf
 
 # --- Model weights & artifacts (handout: never commit model files to Git) ---
 models/*
