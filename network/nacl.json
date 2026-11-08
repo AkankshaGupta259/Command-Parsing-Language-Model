@@ -1,0 +1,14 @@
+{
+  "_comment": "Stateless NACL for the public subnet (10.20.4.0/24), where the load balancer lives. Rules are evaluated lowest number first; first match wins; no match = deny. Inbound rules match the packet SOURCE, outbound rules match the DESTINATION; port_from/port_to are the destination port range. app subnet = 10.20.0.0/22, management subnet = 10.20.5.128/27, ephemeral client ports = 1024-65535.",
+  "inbound": [
+    {"rule": 100, "protocol": "all", "port_from": 0, "port_to": 65535, "cidr": "198.51.100.0/24", "action": "deny"},
+    {"rule": 200, "protocol": "tcp", "port_from": 80, "port_to": 80, "cidr": "0.0.0.0/0", "action": "allow"},
+    {"rule": 210, "protocol": "tcp", "port_from": 443, "port_to": 443, "cidr": "0.0.0.0/0", "action": "allow"},
+    {"rule": 300, "protocol": "tcp", "port_from": 22, "port_to": 22, "cidr": "10.20.5.128/27", "action": "allow"},
+    {"rule": 400, "protocol": "tcp", "port_from": 1024, "port_to": 65535, "cidr": "10.20.0.0/22", "action": "allow"}
+  ],
+  "outbound": [
+    {"rule": 100, "protocol": "tcp", "port_from": 8000, "port_to": 8000, "cidr": "10.20.0.0/22", "action": "allow"},
+    {"rule": 200, "protocol": "tcp", "port_from": 1024, "port_to": 65535, "cidr": "0.0.0.0/0", "action": "allow"}
+  ]
+}
