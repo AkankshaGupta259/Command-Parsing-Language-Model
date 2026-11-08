@@ -1,10 +1,7 @@
 # CS3081 Cloud Computing — Mini Project
 
 Knowledge distillation and deployment of a lightweight command-parsing language
-model on a local Kubernetes cloud. A teacher model (Phi-3.5 via Ollama) labels a
-set of natural-language commands; a 70M student (Pythia-70M) is fine-tuned on those
-labels, containerised as a FastAPI service, and deployed on a k3d cluster with
-object storage, autoscaling, a CI/CD pipeline, and a performance/cost analysis.
+model on a local Kubernetes cloud. A teacher model (Phi-3.5 via Ollama) labels a set of natural-language commands; a 70M student (Pythia-70M) is fine-tuned on those labels, containerised as a FastAPI service, and deployed on a k3d cluster with object storage, autoscaling, a CI/CD pipeline, and a performance/cost analysis.
 
 **GitHub repository:** https://github.com/AkankshaGupta259/Command-Parsing-Language-Model
 
@@ -27,9 +24,8 @@ disclosed in [`AI_USE.md`](AI_USE.md).
 | `results/` | Evaluation outputs, Locust results, and command-output evidence |
 | `report/` | Project report (PDF) |
 
-Model weights are **not** in Git — they are published as **GitHub Release assets**
-(`pythia70m-v1.tar.gz`); only the SHA-256 checksums (`models/v*/model.sha256`) are
-tracked. `make up` downloads the model from the Release into object storage.
+Model weights are published as **GitHub Release assets**
+(`pythia70m-v1.tar.gz`); only the SHA-256 checksums (`models/v*/model.sha256`) are tracked. `make up` downloads the model from the Release into object storage.
 
 ## Prerequisites
 

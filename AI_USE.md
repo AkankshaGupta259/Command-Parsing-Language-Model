@@ -35,27 +35,19 @@ I ran, tested, and tuned the project myself, and every number in my report comes
 - **Task 4: Kubernetes.** I applied the manifests and ran the scaling, rolling
   update and rollback, pod-delete recovery, and cold-start tests myself, tuning the
   resource requests and adding a drain hook until the failure rates met the targets.
-- **Task 5: networking.** I recalculated the subnets by hand and checked the NACL
-  with the provided `nacl_sim.py`, which passed all six sample packets.
+- **Task 5: networking.** I recalculated the subnets by hand and checked the NACL with the provided `nacl_sim.py`, which passed all six sample packets.
 - **Task 6: CI and tests.** I wrote and optimised each unit test myself, got the
   linting clean, and ran the whole pipeline, including the deliberately failing
   quality-gate run.
 
 ## How I checked what the AI gave me
 
-- **I ran everything.** The scores, latency, memory, cold-start times, and cost in
-  my report come from my own runs and the files in `results/`.
-- **I used the provided checkers.** I checked model quality with `score.py`, the
-  NACL with `nacl_sim.py`, and load performance with the Locust file. I used those
-  results to judge whether the work met the requirements.
-- **I read the code.** Building and running the project helped me catch mistakes
-  in the AI output, including a version pin, a Kubernetes field name, and a
-  networking assumption. I reviewed these issues and can explain every file in
-  the repository.
+- **I ran everything.** The scores, latency, memory, cold-start times, and cost in my report come from my own runs and the files in `results/`.
+- **I used the provided checkers.** I checked model quality with `score.py`, the NACL with `nacl_sim.py`, and load performance with the Locust file. I used those results to judge whether the work met the requirements.
+- **I read the code.** Building and running the project helped me catch mistakes in the AI output, including a version pin, a Kubernetes field name, and a networking assumption. I reviewed these issues and can explain every file in the repository.
 
 ## Limitations
 
 A 70M student trained on about 1,500 noisy teacher labels still makes mistakes.
 My reported scores reflect those limitations. The AI also gave some incorrect
-details that sounded convincing, which I caught by running and checking the work
-myself.
+details that sounded convincing, which I caught by running and checking the work myself.
