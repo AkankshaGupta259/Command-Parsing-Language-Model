@@ -1,5 +1,5 @@
 # --- Local-only files (not part of the GitHub code repo) ---
-# The scanned handwritten reflection is a submission-zip item, not repo code.
+# The scanned handwritten reflection is a not repo code.
 230101072.pdf
 
 # --- Model weights & artifacts (handout: never commit model files to Git) ---
