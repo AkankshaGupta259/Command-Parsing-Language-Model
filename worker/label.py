@@ -24,7 +24,6 @@ import sys
 import time
 
 from botocore.exceptions import ClientError
-
 from s3_util import s3_client
 from teacher_client import OLLAMA_HOST, TEACHER_MODEL, health, label, load_prompt
 

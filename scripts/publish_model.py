@@ -37,7 +37,7 @@ if "AWS_ACCESS_KEY_ID" not in os.environ:
     os.environ.setdefault("S3_ENDPOINT",
                           os.environ.get("S3_ENDPOINT_HOST", "http://localhost:8333"))
 
-from s3_util import s3_client, ensure_bucket  # noqa: E402
+from s3_util import ensure_bucket, s3_client  # noqa: E402
 
 MODELS_BUCKET = os.environ.get("MODELS_BUCKET", "models")
 

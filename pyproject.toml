@@ -1,0 +1,13 @@
+# Tooling config for the CI pipeline (Task 6): ruff (lint) and pytest (unit tests).
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = [".venv", "models", "datasets", "results"]
+
+[tool.ruff.lint]
+# pycodestyle errors/warnings, pyflakes, and import sorting.
+select = ["E", "F", "I", "W"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

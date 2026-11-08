@@ -1,0 +1,4 @@
+# Host dependencies for `make up` (scripts/deploy.py). Small, pure-Python.
+# Install once on a fresh clone:  pip install -r requirements-deploy.txt
+boto3==1.43.123
+requests==2.34.2

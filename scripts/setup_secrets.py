@@ -12,7 +12,6 @@ Run:  python scripts/setup_secrets.py
 Requires: kubectl on PATH pointing at the k3d cluster.
 """
 import json
-import os
 import pathlib
 import secrets
 import subprocess

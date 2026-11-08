@@ -1,5 +1,9 @@
-# Task 2 entry points. The teacher is not needed here (Task 1 produced the data).
+# Entry points for the project.
 #
+#   make up                    # build + deploy the whole system from a fresh clone
+#   make down                  # delete the cluster (removes everything)
+#   make lint                  # ruff lint
+#   make test                  # pytest unit tests
 #   make train                 # train v1 on the first 1500 records
 #   make train SUBSET=50       # smoke test: train on the first 50 records only
 #   make train VERSION=v2      # train the second version (extra epochs)
@@ -16,10 +20,22 @@ SUBSET  ?=
 
 SUBSET_ARG := $(if $(SUBSET),--subset $(SUBSET),)
 
-.PHONY: train eval publish help
+.PHONY: up down lint test train eval publish help
 
 help:
-	@echo "targets: train [SUBSET=n] [VERSION=v1|v2], eval, publish VERSION=v1|v2"
+	@echo "targets: up, down, lint, test, train [SUBSET=n] [VERSION=v1|v2], eval, publish VERSION=v1|v2"
+
+up:
+	$(PYTHON) scripts/deploy.py up
+
+down:
+	k3d cluster delete cs3081
+
+lint:
+	$(PYTHON) -m ruff check worker training service scripts tests
+
+test:
+	$(PYTHON) -m pytest
 
 train:
 	$(PYTHON) training/train.py --version $(VERSION) $(SUBSET_ARG)

@@ -20,7 +20,7 @@ import json
 import sys
 import time
 
-from teacher_client import health, label, load_prompt, OLLAMA_HOST, TEACHER_MODEL
+from teacher_client import OLLAMA_HOST, TEACHER_MODEL, health, label, load_prompt
 
 
 def read_jsonl(path):
@@ -34,14 +34,16 @@ def read_jsonl(path):
 
 
 def main():
-    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("input")
     ap.add_argument("output")
     ap.add_argument("--limit", type=int, default=None, help="only process the first N commands")
     a = ap.parse_args()
 
     if not health():
-        sys.exit(f"Ollama at {OLLAMA_HOST} is not reachable or model '{TEACHER_MODEL}' is not pulled.")
+        sys.exit(
+            f"Ollama at {OLLAMA_HOST} is not reachable or model '{TEACHER_MODEL}' is not pulled.")
 
     template = load_prompt()
     rows = read_jsonl(a.input)

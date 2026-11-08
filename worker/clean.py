@@ -154,7 +154,8 @@ def main():
     print(f"  kept ........................ {counts['kept']}")
     print(f"  a+b+c+d+dup+kept ............ {check}  (== input: {check == total})")
     print(f"\n  SHA-256: {digest}")
-    print(f"  wrote {DATASETS_BUCKET}/{TRAIN_KEY}, {DATASETS_BUCKET}/{SHA_KEY}, and local datasets/v1/")
+    print(f"  wrote {DATASETS_BUCKET}/{TRAIN_KEY}, {DATASETS_BUCKET}/{SHA_KEY}, "
+          "and local datasets/v1/")
 
 
 if __name__ == "__main__":

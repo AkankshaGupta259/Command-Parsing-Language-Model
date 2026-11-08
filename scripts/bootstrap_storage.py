@@ -47,7 +47,8 @@ def main():
     assert head["ContentLength"] == local_size, "size mismatch after upload"
 
     print("\nbuckets:", [b["Name"] for b in c.list_buckets()["Buckets"]])
-    print("datasets contents:", [o["Key"] for o in c.list_objects_v2(Bucket="datasets").get("Contents", [])])
+    print("datasets contents:",
+          [o["Key"] for o in c.list_objects_v2(Bucket="datasets").get("Contents", [])])
 
 
 if __name__ == "__main__":

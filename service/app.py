@@ -97,31 +97,39 @@ def _download_model(dest: pathlib.Path):
 
 
 def _load_model():
-    """Background worker: fetch + load the model, then flip the ready flag."""
-    t0 = time.time()
-    try:
-        if MODEL_URI.startswith("s3://"):
-            print(f"[startup] downloading model {MODEL_VERSION} from object storage "
-                  f"{MODEL_URI} (endpoint {S3_ENDPOINT})", flush=True)
-            src = pathlib.Path(tempfile.mkdtemp(prefix="model_"))
-            _download_model(src)
-            print(f"[startup] download complete in {time.time() - t0:.1f}s; loading model",
-                  flush=True)
-        else:
-            src = pathlib.Path(MODEL_URI)   # local directory (development)
-            print(f"[startup] loading model from local path {MODEL_URI}", flush=True)
-        tok = AutoTokenizer.from_pretrained(src)
-        if tok.pad_token is None:
-            tok.pad_token = tok.eos_token
-        model = AutoModelForCausalLM.from_pretrained(src)
-        model.config.pad_token_id = tok.pad_token_id
-        model.eval()
-        STATE["tok"], STATE["model"] = tok, model
-        STATE["ready"] = True
-        print(f"[startup] model {MODEL_VERSION} ready in {time.time() - t0:.1f}s", flush=True)
-    except Exception as exc:  # noqa: BLE001 - surface any load failure via /readyz
-        STATE["error"] = repr(exc)
-        print(f"[startup] model load FAILED: {exc!r}", flush=True)
+    """Background worker: fetch + load the model (with retries), then flip ready.
+
+    Retries transient failures (e.g. object storage not reachable yet right after
+    the cluster starts) so a Pod recovers on its own instead of staying unready.
+    """
+    for attempt in range(1, 6):
+        t0 = time.time()
+        try:
+            if MODEL_URI.startswith("s3://"):
+                print(f"[startup] downloading model {MODEL_VERSION} from object storage "
+                      f"{MODEL_URI} (endpoint {S3_ENDPOINT})", flush=True)
+                src = pathlib.Path(tempfile.mkdtemp(prefix="model_"))
+                _download_model(src)
+                print(f"[startup] download complete in {time.time() - t0:.1f}s; loading model",
+                      flush=True)
+            else:
+                src = pathlib.Path(MODEL_URI)   # local directory (development)
+                print(f"[startup] loading model from local path {MODEL_URI}", flush=True)
+            tok = AutoTokenizer.from_pretrained(src)
+            if tok.pad_token is None:
+                tok.pad_token = tok.eos_token
+            model = AutoModelForCausalLM.from_pretrained(src)
+            model.config.pad_token_id = tok.pad_token_id
+            model.eval()
+            STATE["tok"], STATE["model"] = tok, model
+            STATE["ready"] = True
+            print(f"[startup] model {MODEL_VERSION} ready in {time.time() - t0:.1f}s", flush=True)
+            return
+        except Exception as exc:  # noqa: BLE001 - retry transient storage/network errors
+            STATE["error"] = repr(exc)
+            print(f"[startup] load attempt {attempt} failed: {exc!r}", flush=True)
+            time.sleep(5)
+    print("[startup] model load gave up after retries", flush=True)
 
 
 @app.on_event("startup")
