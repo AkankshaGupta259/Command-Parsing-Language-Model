@@ -34,7 +34,7 @@ spec:
           env:
             - {name: MODEL_URI, value: "s3://models/v1"}
             - {name: MODEL_VERSION, value: "v1"}
-            - {name: MAX_NEW_TOKENS, value: "64"}
+            - {name: MAX_NEW_TOKENS, value: "48"}   # valid JSON is <=31 tokens; caps runaway generations
             - name: POD_NAME                   # -> X-Served-By response header
               valueFrom:
                 fieldRef:

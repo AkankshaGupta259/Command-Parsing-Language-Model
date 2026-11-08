@@ -39,7 +39,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 MODEL_URI = os.environ.get("MODEL_URI", "s3://models/v1")
 MODEL_VERSION = os.environ.get("MODEL_VERSION", "v1")
 S3_ENDPOINT = os.environ.get("S3_ENDPOINT", "http://localhost:8333")
-MAX_NEW_TOKENS = int(os.environ.get("MAX_NEW_TOKENS", "64"))
+MAX_NEW_TOKENS = int(os.environ.get("MAX_NEW_TOKENS", "48"))
 FAULT_INJECT = os.environ.get("FAULT_INJECT", "0") == "1"
 POD_NAME = os.environ.get("POD_NAME") or os.environ.get("HOSTNAME", "unknown")
 
